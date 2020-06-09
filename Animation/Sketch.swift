@@ -33,12 +33,12 @@ class Sketch : NSObject {
                                                     RuleSet(odds: 1, successorText: "X")
                                             ]
             ],
-                                           colors: ["1": Color(hue: 120, saturation: 100, brightness: 61, alpha: 100),
-                                                    "2": Color(hue: 134, saturation: 97, brightness: 46, alpha: 100),
-                                                    "3": Color(hue: 145, saturation: 87, brightness: 8, alpha: 100),
-                                                    "4": Color(hue: 135, saturation: 84, brightness: 41, alpha: 100),
-                                                    "5": Color(hue: 116, saturation: 26, brightness: 100, alpha: 100),
-                                                    "6": Color(hue: 161, saturation: 71, brightness: 53, alpha: 100)
+                                           colors: ["1": Color(hue: 170, saturation: 100, brightness: 61, alpha: 100),
+                                                    "2": Color(hue: 184, saturation: 97, brightness: 46, alpha: 100),
+                                                    "3": Color(hue: 195, saturation: 87, brightness: 8, alpha: 100),
+                                                    "4": Color(hue: 185, saturation: 84, brightness: 41, alpha: 100),
+                                                    "5": Color(hue: 166, saturation: 26, brightness: 100, alpha: 100),
+                                                    "6": Color(hue: 211, saturation: 71, brightness: 53, alpha: 100)
             ],
                                            generations: 5)
         
@@ -58,17 +58,17 @@ class Sketch : NSObject {
                                          generations: 5)
         
         dandelion = LindenmayerSystem(axiom: "2F",
-                                         angle: 20,
-                                         rules: ["F": [
-                                            RuleSet(odds: 1, successorText: "X[++F][+F][-F][--F]"),
-                                            ],
-                                                 "X": [
-                                                    RuleSet(odds: 1, successorText: "XX")
-                                            ]
+                                      angle: 20,
+                                      rules: ["F": [
+                                        RuleSet(odds: 1, successorText: "X[++F][+F][-F][--F]"),
+                                        ],
+                                              "X": [
+                                                RuleSet(odds: 1, successorText: "XX")
+                                        ]
             ],
-                                         colors: ["2": Color(hue: 132, saturation: 3, brightness: 98, alpha: 100),
+                                      colors: ["2": Color(hue: 132, saturation: 3, brightness: 98, alpha: 100),
             ],
-                                         generations: 4)
+                                      generations: 4)
         
         // Create a gradient sky background, blue to white as vertical location increases
         for y in 300...500 {
@@ -116,9 +116,10 @@ class Sketch : NSObject {
             
             // Use a quadratic relationship to define the vertical starting point for the top of each tree
             // (trees grow down from starting point)
-            let x = CGFloat(i - 1) * 50.0 + 75              // This defines "spread" of the trees along the quadratic path
-            let y = a * pow(x - vertex.x, 2) + vertex.y     // Determine vertical position using y = a(x-h)^2 + k
-    
+            let x = CGFloat(i - 1) * 90 + 75
+            // This defines "spread" of the trees along the quadratic path
+            //let y = a * pow(x - vertex.x, 2) + vertex.y     // Determine vertical position using y = a(x-h)^2 + k
+            let y = a * pow(x - vertex.x, 2) + vertex.y
             
             // DEBUG: To help see where starting points are
             print("Starting point for tree is... x: \(x), y: \(y)")
@@ -132,36 +133,43 @@ class Sketch : NSObject {
                                                     length: length,
                                                     initialDirection: 270,
                                                     reduction: 1.25,
-                                                    pointToStartRenderingFrom: Point(x: 100, y: 450),
+                                                    pointToStartRenderingFrom: Point(x: x, y: y),
                                                     drawnOn: canvas)
             
-            var aFlower = VisualizedLindenmayerSystem(system: purpleFlower,
-                                                      length: 2,
-                                                      initialDirection: 00,
-                                                      reduction: 1,
-                                                      pointToStartRenderingFrom: Point(x: 250, y: 250),
-                                                      drawnOn: canvas)
-       //create Dandelion in random positions
+            //draw flowers along the bottom of th canvas
+            for i in 1...100 {
+                let x = 20 * i
+                let y = 100
+                var aFlower = VisualizedLindenmayerSystem(system: purpleFlower,
+                                                          length: length,
+                                                          initialDirection: 0,
+                                                          reduction: 1.5,
+                                                          pointToStartRenderingFrom: Point(x: x, y: y),
+                                                          drawnOn: canvas)
+                aFlower.renderFullSystem()
+            }
+            
+            //create Dandelion in random positions
             
             for _ in 1...10 {
                 let x = random(from: 0, to: 500)
                 let y = random(from: 0, to: 500)
-            var dandelionFlower = VisualizedLindenmayerSystem(system: dandelion,
-                                                               length: length,
-                                                               initialDirection: 90,
-                                                               reduction: 0.6,
-                                                               pointToStartRenderingFrom: Point(x: x, y: y),
-                                                               drawnOn: canvas)
-                    dandelionFlower.renderFullSystem()
+                var dandelionFlower = VisualizedLindenmayerSystem(system: dandelion,
+                                                                  length: length,
+                                                                  initialDirection: 90,
+                                                                  reduction: 0.6,
+                                                                  pointToStartRenderingFrom: Point(x: x, y: y),
+                                                                  drawnOn: canvas)
+                dandelionFlower.renderFullSystem()
             }
             
             
             
             // Render this tree
             aTree.renderFullSystem()
-            aFlower.renderFullSystem()
             
-         
+            
+            
             
         }
         
