@@ -9,6 +9,8 @@ class Sketch : NSObject {
     
     // L-system definitions
     let coniferousTree: LindenmayerSystem
+    let purpleFlower: LindenmayerSystem
+    let dandelion: LindenmayerSystem
     
     // This function runs once
     override init() {
@@ -23,22 +25,50 @@ class Sketch : NSObject {
         coniferousTree = LindenmayerSystem(axiom: "SF",
                                            angle: 20,
                                            rules: ["F": [
-                                                        RuleSet(odds: 1, successorText: "3F[++1F[X]][+2F][-4F][--5F[X]]6F"),
-                                                        RuleSet(odds: 1, successorText: "3F[+1F][+2F][-4F]5F"),
-                                                        RuleSet(odds: 1, successorText: "3F[+1F][-2F][--6F]4F"),
-                                                        ],
+                                            RuleSet(odds: 1, successorText: "3F[++1F[X]][+2F][-4F][--5F[X]]6F"),
+                                            RuleSet(odds: 1, successorText: "3F[+1F][+2F][-4F]5F"),
+                                            RuleSet(odds: 1, successorText: "3F[+1F][-2F][--6F]4F"),
+                                            ],
                                                    "X": [
-                                                        RuleSet(odds: 1, successorText: "X")
-                                                        ]
-                                                  ],
+                                                    RuleSet(odds: 1, successorText: "X")
+                                            ]
+            ],
                                            colors: ["1": Color(hue: 120, saturation: 100, brightness: 61, alpha: 100),
                                                     "2": Color(hue: 134, saturation: 97, brightness: 46, alpha: 100),
                                                     "3": Color(hue: 145, saturation: 87, brightness: 8, alpha: 100),
                                                     "4": Color(hue: 135, saturation: 84, brightness: 41, alpha: 100),
                                                     "5": Color(hue: 116, saturation: 26, brightness: 100, alpha: 100),
                                                     "6": Color(hue: 161, saturation: 71, brightness: 53, alpha: 100)
-                                                   ],
+            ],
                                            generations: 5)
+        
+        
+        purpleFlower = LindenmayerSystem(axiom: "F-F-F-F-F-F",
+                                         angle: 300,
+                                         rules: ["F": [
+                                            RuleSet(odds: 1, successorText: "1F-2X++1F+2F-1X+2F"),
+                                            ],
+                                                 "X": [
+                                                    RuleSet(odds: 1, successorText: "1F-2X+1F++2X+1F+2X")
+                                            ]
+            ],
+                                         colors: ["1": Color(hue: 288, saturation: 80, brightness: 36, alpha: 100),
+                                                  "2": Color(hue: 174, saturation: 71, brightness: 88, alpha: 100),
+            ],
+                                         generations: 5)
+        
+        dandelion = LindenmayerSystem(axiom: "2F",
+                                         angle: 20,
+                                         rules: ["F": [
+                                            RuleSet(odds: 1, successorText: "X[++F][+F][-F][--F]"),
+                                            ],
+                                                 "X": [
+                                                    RuleSet(odds: 1, successorText: "XX")
+                                            ]
+            ],
+                                         colors: ["2": Color(hue: 132, saturation: 3, brightness: 98, alpha: 100),
+            ],
+                                         generations: 4)
         
         // Create a gradient sky background, blue to white as vertical location increases
         for y in 300...500 {
@@ -47,7 +77,7 @@ class Sketch : NSObject {
             let currentSaturation = 100.0 - Float(y - 300) / 2
             // DEBUG: Uncomment line below to see how this value changes
             print("currentSaturation is: \(currentSaturation)")
-            canvas.lineColor = Color(hue: 200.0, saturation: currentSaturation, brightness: 90.0, alpha: 100.0)
+            canvas.lineColor = Color(hue: 270.0, saturation: currentSaturation, brightness: 70.0, alpha: 100.0)
             
             // Draw a horizontal line at this vertical location
             canvas.drawLine(from: Point(x: 0, y: y), to: Point(x: canvas.width, y: y))
@@ -83,7 +113,7 @@ class Sketch : NSObject {
         
         // Iterate to create 9 trees
         for i in 1...9 {
-
+            
             // Use a quadratic relationship to define the vertical starting point for the top of each tree
             // (trees grow down from starting point)
             let x = CGFloat(i - 1) * 50.0 + 75              // This defines "spread" of the trees along the quadratic path
@@ -104,8 +134,35 @@ class Sketch : NSObject {
                                                     pointToStartRenderingFrom: Point(x: x, y: y),
                                                     drawnOn: canvas)
             
+            var aFlower = VisualizedLindenmayerSystem(system: purpleFlower,
+                                                      length: 2,
+                                                      initialDirection: 00,
+                                                      reduction: 1,
+                                                      pointToStartRenderingFrom: Point(x: 250, y: 250),
+                                                      drawnOn: canvas)
+            
+            
+            
+            var dandelionFlower = VisualizedLindenmayerSystem(system: dandelion,
+                                                               length: 200,
+                                                               initialDirection: 90,
+                                                               reduction: 2,
+                                                               pointToStartRenderingFrom: Point(x: 150, y: 20),
+                                                               drawnOn: canvas)
+            
+            var anotherDandelionFlower = VisualizedLindenmayerSystem(system: dandelion,
+                                                              length: 200,
+                                                              initialDirection: 90,
+                                                              reduction: 2,
+                                                              pointToStartRenderingFrom: Point(x: 450, y: 20),
+                                                              drawnOn: canvas)
+            
+            
             // Render this tree
-            aTree.renderFullSystem()
+            //aTree.renderFullSystem()
+            aFlower.renderFullSystem()
+            dandelionFlower.renderFullSystem()
+            anotherDandelionFlower.renderFullSystem()
             
         }
         
