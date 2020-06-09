@@ -118,6 +118,7 @@ class Sketch : NSObject {
             // (trees grow down from starting point)
             let x = CGFloat(i - 1) * 50.0 + 75              // This defines "spread" of the trees along the quadratic path
             let y = a * pow(x - vertex.x, 2) + vertex.y     // Determine vertical position using y = a(x-h)^2 + k
+    
             
             // DEBUG: To help see where starting points are
             print("Starting point for tree is... x: \(x), y: \(y)")
@@ -131,7 +132,7 @@ class Sketch : NSObject {
                                                     length: length,
                                                     initialDirection: 270,
                                                     reduction: 1.25,
-                                                    pointToStartRenderingFrom: Point(x: x, y: y),
+                                                    pointToStartRenderingFrom: Point(x: 100, y: 450),
                                                     drawnOn: canvas)
             
             var aFlower = VisualizedLindenmayerSystem(system: purpleFlower,
@@ -140,29 +141,27 @@ class Sketch : NSObject {
                                                       reduction: 1,
                                                       pointToStartRenderingFrom: Point(x: 250, y: 250),
                                                       drawnOn: canvas)
+       //create Dandelion in random positions
             
-            
-            
+            for _ in 1...10 {
+                let x = random(from: 0, to: 500)
+                let y = random(from: 0, to: 500)
             var dandelionFlower = VisualizedLindenmayerSystem(system: dandelion,
-                                                               length: 200,
+                                                               length: length,
                                                                initialDirection: 90,
-                                                               reduction: 2,
-                                                               pointToStartRenderingFrom: Point(x: 150, y: 20),
+                                                               reduction: 0.6,
+                                                               pointToStartRenderingFrom: Point(x: x, y: y),
                                                                drawnOn: canvas)
+                    dandelionFlower.renderFullSystem()
+            }
             
-            var anotherDandelionFlower = VisualizedLindenmayerSystem(system: dandelion,
-                                                              length: 200,
-                                                              initialDirection: 90,
-                                                              reduction: 2,
-                                                              pointToStartRenderingFrom: Point(x: 450, y: 20),
-                                                              drawnOn: canvas)
             
             
             // Render this tree
-            //aTree.renderFullSystem()
+            aTree.renderFullSystem()
             aFlower.renderFullSystem()
-            dandelionFlower.renderFullSystem()
-            anotherDandelionFlower.renderFullSystem()
+            
+         
             
         }
         
